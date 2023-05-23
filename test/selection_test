@@ -1,0 +1,32 @@
+import maya.cmds as cmds
+
+class MyDraggerContext:
+    def __init__(self, draggerContextName):
+        self.draggerContextName = draggerContextName
+
+    def dragger_onPress(self):
+        pos = cmds.draggerContext(self.draggerContextName, query=True, anchorPoint=True)
+        print("init:", pos[0], pos[1], pos[2])
+        return pos
+
+    def dragger_onDrag(self):
+        pos = cmds.draggerContext(self.draggerContextName, query=True, dragPoint=True)
+        print("drag pos:", pos[0], pos[1], pos[2])
+        return pos
+
+    def create_dragger_context(self):
+        if cmds.contextInfo(self.draggerContextName, exists=True):
+            cmds.deleteUI(self.draggerContextName, toolContext=True)
+
+        cmds.draggerContext(
+            self.draggerContextName,
+            pressCommand=self.dragger_onPress,
+            dragCommand=self.dragger_onDrag,
+            cursor="crossHair",
+            space="world"
+        )
+        cmds.setToolTo(self.draggerContextName)
+
+# Usage example:
+dragger_context = MyDraggerContext("myDragger")
+dragger_context.create_dragger_context()

@@ -1,0 +1,1 @@
+I don't know how to do test in maya, I splited the program into small pices, every python script is a test unit.
